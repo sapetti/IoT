@@ -1,6 +1,8 @@
 # IoT
 This is an small project to connect NodeMCU boards with some services in the cloud allowing interaction through a web application (see details below).
 
+[![Arch](https://github.com/sapetti/IoT/blob/master/img/arch.png)]
+
 ## NodeMCU
 In an initial stage it will only do the following tasks:
 * Register: Once the board is connected to internet or if the server requests it. This consists in send the board details to the cloud.
@@ -25,12 +27,12 @@ __Technologies__
 Simple UI to display the status of the boards and its measures. It also allows to interact with board.
 
 __Technologies__
-React
-Highcharts
-Websockets
+* React
+* Highcharts
+* Websockets
  
 ## Cloud services
-[Heroku](https://www.heroku.com/): As the AS.
-[CloudMQTT](https://www.cloudmqtt.com/): As the broker for the communications between the backend and the boards.
-[mLab](https://mlab.com/): To store the details such as the temperature.
+* [Heroku](https://www.heroku.com/): As the AS.
+* [CloudMQTT](https://www.cloudmqtt.com/): As the broker for the communications between the backend and the boards.
+* [mLab](https://mlab.com/): To store the details such as the temperature.
  
