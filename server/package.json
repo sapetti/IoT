@@ -4,7 +4,13 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "bluebird": "^3.5.1",
+    "express": "^4.16.2",
     "mongodb": "^2.2.33",
     "mqtt": "^2.14.0"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false
   }
 }

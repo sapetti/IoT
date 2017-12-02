@@ -1,7 +1,7 @@
 # IoT
 This is an small project to connect NodeMCU boards with some services in the cloud allowing interaction through a web application (see details below).
 
-[![Arch](https://github.com/sapetti/IoT/blob/master/img/arch.png)]
+![Arch](https://github.com/sapetti/IoT/blob/master/img/arch.png)
 
 ## NodeMCU
 In an initial stage it will only do the following tasks:
