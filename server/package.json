@@ -9,6 +9,9 @@
     "mongodb": "^2.2.33",
     "mqtt": "^2.14.0"
   },
+  "scripts": {
+    "start": "node index.js"
+  },
   "prettier": {
     "singleQuote": true,
     "semi": false
