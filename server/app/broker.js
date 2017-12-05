@@ -1,59 +1,70 @@
 const mqtt = require('mqtt')
-
-function _init(options) {
-    if(!options) throw new Error('MQTT: Connection options are mandatory')
-    const {url, username, password, port} = options
-    if(!url || !username || !password || !port) throw new Error('MQTT: Review your connection, there is at least one option missing (url, username, password or port)')
-
-    console.log('MQTT: Estabilishing connection with MQTT server')
-    this.client = mqtt.connect(url, {
-        username, 
-        password,
-        port
-    })
-    
-    this.client.on('connect', () => {
-        console.log('MQTT: Connection to the server successful')
-        this.connected = true
-    })
-
-    //TODO: handle disconnection
-
-    this.client.on('message', (topic, message) => {
-        console.log('MQTT: Message received: ', topic)
-        if(!this.subscriptions[topic]) {
-            //This should never happen... skip message action but log the error
-            console.error('MQTT: Unsubscribed topic', topic, JSON.stringify(message))
-        } else {
-            //Let the callback provided handle the message content
-            this.subscriptions[topic](message)
-        }
-    })
-
-    return this
-}
-
-function _publish(topic, message) {
-    console.log('MQTT: Publishing message for', topic)
-    this.client.publish(topic, message)
-    return this
-}
-
-function _subscribe(topic, callback) {
-    console.log('MQTT: Subscribing to', topic)
-    this.client.subscribe(topic)
-    this.subscriptions[topic] = callback
-    return this
-}
+const Promise = require('bluebird')
 
 module.exports = (function() {
-    client = null
-    connected = false
-    subscriptions = {}
+  let client = null
+  let connected = false
+  let subscriptions = {}
 
-    return {
-        init: _init,
-        publish: _publish,
-        subscribe: _subscribe
-    }
+  function _init({ url, username, password, port }) {
+    return new Promise((resolve, reject) => {
+      if (!url || !username || !password || !port)
+        reject(
+          'MQTT: Review your connection, there is at least one option missing (url, username, password or port)'
+        )
+
+      console.log('MQTT: Estabilishing connection with MQTT server')
+      client = mqtt.connect(url, {
+        username,
+        password,
+        port
+      })
+
+      client.on('connect', () => {
+        console.log('MQTT: Connection to the server successful')
+        connected = true
+        resolve()
+      })
+
+      //TODO: handle disconnection
+
+      client.on('message', (topic, message) => {
+        console.log('MQTT: Message received: ', topic)
+        if (!subscriptions[topic]) {
+          //This should never happen... skip message action but log the error
+          console.error(
+            'MQTT: Unsubscribed topic',
+            topic,
+            JSON.stringify(message)
+          )
+        } else {
+          //Let the onMessage function provided handle the message content
+          subscriptions[topic](message)
+        }
+      })
+    })
+  }
+
+  function _publish(topic, message) {
+    return new Promise((resolve, reject) => {
+      console.log('MQTT: Publishing message for', topic)
+      client.publish(topic, message)
+      resolve()
+    })
+  }
+
+  function _subscribe(topic, onMessage) {
+    return new Promise((resolve, reject) => {
+      console.log('MQTT: Subscribing to', topic)
+      client.subscribe(topic)
+      subscriptions[topic] = onMessage
+      resolve()
+    })
+  }
+
+  return {
+    init: _init,
+    publish: _publish,
+    subscribe: _subscribe
+  }
 })()
