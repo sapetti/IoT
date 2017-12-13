@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // import { AnimatedSwitch, spring } from "react-router-transition";
+import { Panel, Navbar, Nav, NavItem } from "react-bootstrap";
 import Loadable from "react-loadable";
+//Custom
 import { LoadingPage } from "./components/LoadingPage";
 
-import logo from "./logo.svg";
-import "./App.css";
+// import logo from "./logo.svg";
 
 // ---> Loadable components
 const AsyncBoardsTable = Loadable({
@@ -49,42 +50,45 @@ const AsyncBoardDetail = Loadable({
 //   }
 // };
 
+//TODO: Move this Menu component to a ./components/navigation.js
+const NavLink = ({ to, label }) => (
+  <NavItem componentClass="span" style={{ padding: "15px 15px" }}>
+    <Link to={to}>{label}</Link>
+  </NavItem>
+);
+
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">NodeMCU Dashboard</h1>
-        </header>
-        <Router>
-          <div>
-            <header className="header container">
-              <nav className="navbar">
-                <div className="navbar-brand">
-                  <Link to="/">
-                    <span className="navbar-item">Home</span>
-                  </Link>
-                </div>
-                <div className="navbar-end">
-                  <Link to="/another">
-                    <span className="navbar-item">Another route</span>
-                  </Link>
-                </div>
-                <div className="navbar-end">
-                  <Link to="/detail">
-                    <span className="navbar-item">Board Detail</span>
-                  </Link>
-                </div>
-              </nav>
-            </header>
-            <Switch>
-              <Route exact path="/" component={AsyncBoardsTable} />
-              <Route exact path="/another" component={AsyncAnotherComponent} />
-              <Route exact path="/detail" component={AsyncBoardDetail} />
-            </Switch>
-          </div>
-        </Router>
+      <div>
+        {/* <img src={logo} className="App-logo" alt="logo" /> */}
+        <Panel>
+          <Router>
+            <div>
+              <Navbar>
+                <Navbar.Header>
+                  <Navbar.Brand>NodeMCU Dashboard</Navbar.Brand>
+                </Navbar.Header>
+                <Nav>
+                  <NavLink to="/" label="Home" />
+                  <NavLink to="/another" label="Another route" />
+                  <NavLink to="/detail" label="Board Detail" />
+                </Nav>
+              </Navbar>
+              <Panel>
+                <Switch>
+                  <Route exact path="/" component={AsyncBoardsTable} />
+                  <Route
+                    exact
+                    path="/another"
+                    component={AsyncAnotherComponent}
+                  />
+                  <Route exact path="/detail" component={AsyncBoardDetail} />
+                </Switch>
+              </Panel>
+            </div>
+          </Router>
+        </Panel>
       </div>
     );
   }

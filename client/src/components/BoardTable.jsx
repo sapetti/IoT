@@ -1,13 +1,33 @@
 import React, { Component } from "react";
-import { Cross } from "../images/icons";
+import { Table, Panel, Glyphicon } from "react-bootstrap";
 
 import { BOARDS, UNREGISTER } from "../config";
 
-const deleteButton = handler => (
-  <a href="#unregister" onClick={handler} className="f6 dark-red">
-    <Cross color="red">Delete</Cross>
+const centered = { style: { textAlign: "center" } };
+const glyphRed = { style: { color: "red", fontSize: "20px" } };
+const glyphGreen = { style: { color: "green", fontSize: "20px" } };
+const glyphBlue = { style: { color: "blue", fontSize: "20px" } };
+
+//TODO: move this components to ./component/commons.js
+
+const DeleteLink = handler => (
+  <a href="#unregister" onClick={handler} title="Unregister">
+    <Glyphicon glyph="remove" {...glyphRed} />
   </a>
 );
+
+const EditLink = handler => (
+  <a href="#edit" onClick={handler} title="Edit">
+    <Glyphicon glyph="pencil" {...glyphBlue} />
+  </a>
+);
+
+const StatusComponent = ({ status }) =>
+  "UP" === status ? (
+    <Glyphicon glyph="ok" {...glyphGreen} />
+  ) : (
+    <Glyphicon glyph="remove" {...glyphRed} />
+  );
 
 export class BoardsTable extends Component {
   constructor(props) {
@@ -33,15 +53,15 @@ export class BoardsTable extends Component {
     console.log("boards", boards);
     console.log("state", this.state);
     return (
-      <div className="pa4">
-        <table className="fl w-100 ba b--solid br1">
+      <Panel header="Boards">
+        <Table striped condensed hover responsive>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Place</th>
-              <th>Services</th>
-              <th>Status</th>
-              <th>Unregister</th>
+              <th {...centered}>Name</th>
+              <th {...centered}>Location</th>
+              <th {...centered}>Services</th>
+              <th {...centered}>Status</th>
+              <th {...centered}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -50,13 +70,17 @@ export class BoardsTable extends Component {
                 <td>{b.name}</td>
                 <td>{b.place}</td>
                 <td>{b.services}</td>
-                <td>?</td>
-                <td>{deleteButton(this.unregister(b.id))}</td>
+                <td {...centered}>
+                  <StatusComponent status="UP" />
+                </td>
+                <td {...centered}>
+                  <span>{EditLink()}</span> {DeleteLink(this.unregister(b.id))}
+                </td>
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
+        </Table>
+      </Panel>
     );
   }
 }
